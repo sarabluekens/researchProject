@@ -1,7 +1,16 @@
 import 'package:ar_flutter_plugin/ar_flutter_plugin.dart';
+import 'package:ar_flutter_plugin/datatypes/node_types.dart';
+import 'package:ar_flutter_plugin/managers/ar_anchor_manager.dart';
+import 'package:ar_flutter_plugin/managers/ar_location_manager.dart';
+import 'package:ar_flutter_plugin/managers/ar_object_manager.dart';
+import 'package:ar_flutter_plugin/managers/ar_session_manager.dart';
+import 'package:ar_flutter_plugin/models/ar_node.dart';
 import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:vector_math/vector_math_64.dart' as vector;
+import 'package:arcore_flutter_plugin/arcore_flutter_plugin.dart';
 
 void main() {
   runApp(MyApp());
@@ -18,7 +27,7 @@ class MyApp extends StatelessWidget {
         title: 'Namer App',
         theme: ThemeData(
           useMaterial3: true,
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepOrange),
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.orangeAccent),
         ),
         home: MyHomePage(),
       ),
@@ -135,7 +144,7 @@ class GeneratorPage extends StatelessWidget {
                 label: Text('Like'),
               ),
               SizedBox(width: 10),
-              ElevatedButton(
+              ElevatedButton( 
                 onPressed: () {
                   appState.getNext();
                 },
@@ -175,5 +184,40 @@ class BigCard extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+class ARScene extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('AR Scene'),
+      ),
+      body: ARView(
+        onARViewCreated: onARViewCreated,
+      ),
+    );
+  }
+
+  void onARViewCreated(
+      ARSessionManager sessionManager,
+      ARObjectManager objectManager,
+      ARAnchorManager anchorManager,
+      ARLocationManager locationManager) async {
+    // Ask for camera permission
+    PermissionStatus status = await Permission.camera.request();
+
+    if (status.isGranted) {
+      final node = ARNode(
+        position: vector.Vector3(0, 0, -0.5),
+        type: NodeType.localGLTF2,
+        uri:
+            'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/Duck/glTF/Duck.gltf',
+      );
+      objectManager.addNode(node);
+    } else {
+      // Handle the case when the permission is not granted
+    }
   }
 }
