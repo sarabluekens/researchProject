@@ -83,6 +83,6 @@ class TestComponent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Text("Hello pretty world");
+    return const Text("Hello scary world");
   }
 }
