@@ -12,12 +12,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Unity Demo',
+      title: 'Flutter Unity Demo static',
       theme: ThemeData(
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: MyHomePage(title: "Flutter Unity Demo"),
+      home: MyHomePage(title: "Flutter Unity Demo static"),
     );
   }
 }
