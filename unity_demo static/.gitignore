@@ -46,11 +46,9 @@ app.*.map.json
 # Unity ignore files
 */unityLibrary
 
-unity/unity/Library
-unity/unity/Temp
-unity/unity/obj
-unity/unity/Logs
-unity/unity/memory
-unity/unity/Builds/*
-
-
+unity/static demo/Library
+unity/static demo/Temp
+unity/static demo/obj
+unity/static demo/Logs
+unity/static demo/memory
+unity/static demo/Builds/*
