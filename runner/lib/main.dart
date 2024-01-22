@@ -13,11 +13,12 @@ class Runner extends FlameGame {
     super.onLoad();
     ParallaxComponent bg = await loadParallaxComponent(
       [
+        ParallaxImageData('background3.jpg'),
         ParallaxImageData('background2.jpeg'),
       ],
       repeat: ImageRepeat.repeatY,
       baseVelocity: Vector2(0, 20),
-      velocityMultiplierDelta: Vector2(0, -20),
+      velocityMultiplierDelta: Vector2(0, -2),
     );
     add(bg);
   }
