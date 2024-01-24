@@ -62,7 +62,7 @@ class _GameAppState extends State<GameApp> {
                               PlayState.welcome.name: (context, game) =>
                                   const OverlayScreen(
                                     title: 'F L A M E   D E M O',
-                                    subtitle: 'Use key arrows or swipe to play',
+                                    subtitle: 'Use key arrows or tap to play',
                                   ),
                               PlayState.gameOver.name: (context, game) =>
                                   const OverlayScreen(

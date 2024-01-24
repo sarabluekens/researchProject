@@ -84,6 +84,13 @@ class EndlessRunner extends FlameGame
       cornerRadius: const Radius.circular(ballRadius / 2),
     ));
 
+    world.add(Brick(
+        Vector2(
+          random.nextDouble() * (width - brickWidth) + brickWidth / 2,
+          (1 + 2.0) * brickHeight + 1 * brickGutter,
+        ),
+        Colors.red));
+
     _timer = TimerComponent(
         period: 3,
         repeat: true,
@@ -107,11 +114,14 @@ class EndlessRunner extends FlameGame
 
   @override
   void onTap() {
-    if (playState != PlayState.playing) {
-      super.onTap();
-      print("tapped");
-      startGame();
+    if (playState == PlayState.gameOver) {
+      if (_timer.isLoaded) {
+        remove(_timer);
+      }
     }
+    super.onTap();
+    print("tapped");
+    startGame();
   }
 
   @override

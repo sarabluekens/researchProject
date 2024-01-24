@@ -1,6 +1,5 @@
 import 'package:flame/components.dart';
 import 'package:flame/game.dart';
-import 'package:runner/src/endless_runner.dart';
 import 'package:flame/sprite.dart';
 
 class Player extends FlameGame {
