@@ -1,5 +1,6 @@
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
+import 'package:runner/src/components/brick2.dart';
 import 'package:runner/src/components/components.dart';
 import 'package:runner/src/config.dart';
 import 'package:runner/src/endless_runner.dart';
@@ -23,12 +24,12 @@ class Brick extends RectangleComponent
   void onCollisionStart(
       Set<Vector2> intersectionPoints, PositionComponent other) {
     super.onCollisionStart(intersectionPoints, other);
-    print(game.world.children.toList());
     removeFromParent();
     game.playState = PlayState.gameOver;
     game.world.removeAll(game.world.children.query<Ball>());
     game.world.removeAll(game.world.children.query<Bat>());
     game.world.removeAll(game.world.children.query<Brick>());
+    game.world.removeAll(game.world.children.query<Brick2>());
   }
 
   @override

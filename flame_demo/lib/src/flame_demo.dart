@@ -7,7 +7,6 @@ import 'package:flame/game.dart';
 import 'config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
 import 'components/components.dart';
 
 enum PlayState { welcome, playing, gameOver, won }

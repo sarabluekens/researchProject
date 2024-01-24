@@ -4,6 +4,7 @@ import 'package:flame/components.dart';
 import 'package:flame/game.dart';
 import 'package:flame/events.dart';
 import 'package:flame/parallax.dart';
+import 'package:runner/src/components/brick2.dart';
 import 'config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -52,6 +53,7 @@ class EndlessRunner extends FlameGame
 
   @override
   FutureOr<void> onLoad() async {
+    debugMode = true;
     super.onLoad();
     //Configures the top left as the anchor for the viewfinder
     camera.viewfinder.anchor = Anchor.topLeft;
@@ -106,7 +108,14 @@ class EndlessRunner extends FlameGame
                         (1 + 2.0) * brickHeight + 1 * brickGutter,
                       ),
                       Colors.red)),
-                }
+                },
+              print("timer tick, added 2nd brick"),
+              world.add(Brick2(
+                  Vector2(
+                    random.nextDouble() * (width - brickWidth) + brickWidth / 2,
+                    (1 + 2.0) * brickHeight + 1 * brickGutter,
+                  ),
+                  Colors.green)),
             });
 
     add(_timer);
