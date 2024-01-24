@@ -1,14 +1,14 @@
 import 'dart:async';
-import 'dart:math' as math;
 
 import 'package:flame/components.dart';
-import 'package:flame/events.dart';
 import 'package:flame/game.dart';
+import 'package:flame/timer.dart';
+import 'package:flame/events.dart';
 import 'package:flame/parallax.dart';
 import 'config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
+import 'dart:math' as math;
 import 'components/components.dart';
 
 enum PlayState { welcome, playing, gameOver, won }
@@ -25,7 +25,6 @@ class EndlessRunner extends FlameGame
 
   final ValueNotifier<int> score = ValueNotifier<int>(0);
   final random = math.Random();
-
   //You expose the width and height of the game
   //so that the children components, like PlayArea,
   //can set themselves to the appropriate size.
@@ -57,6 +56,7 @@ class EndlessRunner extends FlameGame
     camera.viewfinder.anchor = Anchor.topLeft;
     world.add(PlayArea());
     playState = PlayState.welcome;
+    //world.add(Player());
   }
 
   void startGame() async {
@@ -75,7 +75,6 @@ class EndlessRunner extends FlameGame
     world.add(bg);
     playState = PlayState.playing;
     score.value = 0;
-
     world.add(Ball(
         difficultyModifier: difficultyModifier,
         radius: ballRadius,
@@ -89,17 +88,17 @@ class EndlessRunner extends FlameGame
       size: Vector2(batWidth, batHeight),
       cornerRadius: const Radius.circular(ballRadius / 2),
     ));
-    world.addAll([
-      for (var i = 0; i < brickColors.length; i++)
-        for (var j = 0; j <= 5; j++)
-          Brick(
-            Vector2(
-              (i + 0.5) * brickWidth + (i + 1) * brickGutter,
-              (j + 2.0) * brickHeight + j * brickGutter,
-            ),
-            brickColors[i],
-          )
-    ]);
+
+    add(TimerComponent(
+      period: 3,
+      repeat: true,
+      onTick: () => world.add(Brick(
+          Vector2(
+            (1 + 0.5) * brickWidth + (1 + 1) * brickGutter,
+            (1 + 2.0) * brickHeight + 1 * brickGutter,
+          ),
+          Colors.red)),
+    ));
   }
 
   @override
@@ -117,11 +116,19 @@ class EndlessRunner extends FlameGame
       print("swiped");
 
       if (details.velocity[0] > 0) {
-        print("swiped right");
-        world.children.query<Bat>().first.moveBy(batStep);
+        print("swiped right ${world.children.query<Bat>().first.position[0]}");
+        if (world.children.query<Bat>().first.position[0] < 600.0) {
+          world.children.query<Bat>().first.moveBy(batStep);
+        } else {
+          print("swiped blocked");
+        }
       } else if (details.velocity[0] < 0) {
-        print("swiped left");
-        world.children.query<Bat>().first.moveBy(-batStep);
+        if (world.children.query<Bat>().first.position[0] > 170) {
+          print("swiped left");
+          world.children.query<Bat>().first.moveBy(-batStep);
+        } else {
+          print("swiped blocked");
+        }
       }
     }
   }

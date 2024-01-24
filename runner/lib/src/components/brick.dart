@@ -17,17 +17,24 @@ class Brick extends RectangleComponent
               ..style = PaintingStyle.fill,
             children: [RectangleHitbox()]);
 
+  double speed = obstacleSpeed;
   @override
   void onCollisionStart(
       Set<Vector2> intersectionPoints, PositionComponent other) {
     super.onCollisionStart(intersectionPoints, other);
     removeFromParent();
-    game.score.value++;
+    game.playState = PlayState.gameOver;
+    game.world.removeAll(game.world.children.query<Ball>());
+    game.world.removeAll(game.world.children.query<Bat>());
 
-    if (game.world.children.query<Brick>().length == 1) {
-      game.playState = PlayState.won;
-      game.world.removeAll(game.world.children.query<Ball>());
-      game.world.removeAll(game.world.children.query<Bat>());
-    }
+    // if (game.world.children.query<Brick>().length == 1) {
+    //   game.playState = PlayState.won;
+    // }
+  }
+
+  @override
+  void update(double dt) {
+    super.update(dt);
+    y += speed * dt;
   }
 }

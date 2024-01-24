@@ -21,6 +21,7 @@ const batWidth = 200.0;
 const batHeight = 200.0;
 const batStep = gameHeight * 0.15;
 const brickGutter = gameWidth * 0.015;
+const obstacleSpeed = 100.0;
 final brickWidth =
     (gameWidth - (brickGutter * (brickColors.length + 1))) / brickColors.length;
 
