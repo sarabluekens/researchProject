@@ -6,7 +6,6 @@ import 'package:flame/collisions.dart';
 import 'play_area.dart';
 import 'bat.dart';
 import 'brick.dart';
-import 'play_area.dart';
 
 class Ball extends CircleComponent
     with CollisionCallbacks, HasGameReference<FlameDemo> {
