@@ -108,14 +108,15 @@ class EndlessRunner extends FlameGame
                         (1 + 2.0) * brickHeight + 1 * brickGutter,
                       ),
                       Colors.red)),
+                  print("timer tick, added 2nd brick"),
+                  world.add(Brick2(
+                      Vector2(
+                        random.nextDouble() * (width - brickWidth) +
+                            brickWidth / 2,
+                        (1 + 2.0) * brickHeight + 1 * brickGutter,
+                      ),
+                      Colors.green)),
                 },
-              print("timer tick, added 2nd brick"),
-              world.add(Brick2(
-                  Vector2(
-                    random.nextDouble() * (width - brickWidth) + brickWidth / 2,
-                    (1 + 2.0) * brickHeight + 1 * brickGutter,
-                  ),
-                  Colors.green)),
             });
 
     add(_timer);

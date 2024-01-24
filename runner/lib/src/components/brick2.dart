@@ -39,8 +39,10 @@ class Brick2 extends SpriteAnimationComponent
     brickAnimation = SpriteAnimationComponent.fromFrameData(
       sprite,
       data,
-    )..x = 0;
-
+    )
+      ..x = 0
+      ..size = Vector2(128, 128);
+    add(RectangleHitbox(anchor: Anchor.topLeft, size: Vector2.all(128)));
     add(brickAnimation);
   }
 
@@ -48,6 +50,8 @@ class Brick2 extends SpriteAnimationComponent
   void onCollisionStart(
       Set<Vector2> intersectionPoints, PositionComponent other) {
     super.onCollisionStart(intersectionPoints, other);
+    print("booomn collided with brick2");
+
     removeFromParent();
     game.playState = PlayState.gameOver;
     game.world.removeAll(game.world.children.query<Ball>());

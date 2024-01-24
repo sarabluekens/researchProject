@@ -24,6 +24,7 @@ class Brick extends RectangleComponent
   void onCollisionStart(
       Set<Vector2> intersectionPoints, PositionComponent other) {
     super.onCollisionStart(intersectionPoints, other);
+    print("booomn collided with brick");
     removeFromParent();
     game.playState = PlayState.gameOver;
     game.world.removeAll(game.world.children.query<Ball>());
