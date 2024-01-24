@@ -18,6 +18,7 @@ class Brick extends RectangleComponent
             children: [RectangleHitbox()]);
 
   double speed = obstacleSpeed;
+
   @override
   void onCollisionStart(
       Set<Vector2> intersectionPoints, PositionComponent other) {
@@ -26,15 +27,16 @@ class Brick extends RectangleComponent
     game.playState = PlayState.gameOver;
     game.world.removeAll(game.world.children.query<Ball>());
     game.world.removeAll(game.world.children.query<Bat>());
-
-    // if (game.world.children.query<Brick>().length == 1) {
-    //   game.playState = PlayState.won;
-    // }
+    game.world.removeAll(game.world.children.query<Brick>());
   }
 
   @override
   void update(double dt) {
     super.update(dt);
     y += speed * dt;
+
+    if (y > game.height) {
+      removeFromParent();
+    }
   }
 }

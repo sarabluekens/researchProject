@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flame/components.dart';
 import 'package:flame/game.dart';
-import 'package:flame/timer.dart';
 import 'package:flame/events.dart';
 import 'package:flame/parallax.dart';
 import 'config.dart';
@@ -25,6 +24,7 @@ class EndlessRunner extends FlameGame
 
   final ValueNotifier<int> score = ValueNotifier<int>(0);
   final random = math.Random();
+  late TimerComponent _timer;
   //You expose the width and height of the game
   //so that the children components, like PlayArea,
   //can set themselves to the appropriate size.
@@ -41,6 +41,8 @@ class EndlessRunner extends FlameGame
       case PlayState.gameOver:
       case PlayState.won:
         overlays.add(playState.name);
+
+      // clear intervam
       case PlayState.playing:
         overlays.remove(PlayState.welcome.name);
         overlays.remove(PlayState.gameOver.name);
@@ -51,7 +53,6 @@ class EndlessRunner extends FlameGame
   @override
   FutureOr<void> onLoad() async {
     super.onLoad();
-
     //Configures the top left as the anchor for the viewfinder
     camera.viewfinder.anchor = Anchor.topLeft;
     world.add(PlayArea());
@@ -60,28 +61,22 @@ class EndlessRunner extends FlameGame
   }
 
   void startGame() async {
-    if (playState == PlayState.playing) return;
     world.removeAll(world.children.query<Ball>());
     world.removeAll(world.children.query<Bat>());
     world.removeAll(world.children.query<Brick>());
-    ParallaxComponent bg = await loadParallaxComponent([
-      ParallaxImageData('background3.jpg'),
-      ParallaxImageData('background2.jpeg'),
-    ],
-        repeat: ImageRepeat.repeatY,
-        baseVelocity: Vector2(0, -20),
-        velocityMultiplierDelta: Vector2(0, 2),
-        size: Vector2(width, height));
+    ParallaxComponent bg = await loadParallaxComponent(
+      [
+        ParallaxImageData('background3.jpg'),
+        ParallaxImageData('background2.jpeg'),
+      ],
+      repeat: ImageRepeat.repeatY,
+      baseVelocity: Vector2(0, -20),
+      velocityMultiplierDelta: Vector2(0, 2),
+      size: Vector2(width, height),
+    );
     world.add(bg);
     playState = PlayState.playing;
     score.value = 0;
-    world.add(Ball(
-        difficultyModifier: difficultyModifier,
-        radius: ballRadius,
-        position: size / 2,
-        velocity: Vector2(random.nextDouble() - 0.5 * width, height * 0.2)
-            .normalized()
-          ..scale(height / 4)));
 
     world.add(Bat(
       position: Vector2(width / 2, height * 0.90),
@@ -89,16 +84,25 @@ class EndlessRunner extends FlameGame
       cornerRadius: const Radius.circular(ballRadius / 2),
     ));
 
-    add(TimerComponent(
-      period: 3,
-      repeat: true,
-      onTick: () => world.add(Brick(
-          Vector2(
-            (1 + 0.5) * brickWidth + (1 + 1) * brickGutter,
-            (1 + 2.0) * brickHeight + 1 * brickGutter,
-          ),
-          Colors.red)),
-    ));
+    _timer = TimerComponent(
+        period: 3,
+        repeat: true,
+        removeOnFinish: true,
+        onTick: () => {
+              if (playState == PlayState.playing)
+                {
+                  print("timer tick, added brick"),
+                  world.add(Brick(
+                      Vector2(
+                        random.nextDouble() * (width - brickWidth) +
+                            brickWidth / 2,
+                        (1 + 2.0) * brickHeight + 1 * brickGutter,
+                      ),
+                      Colors.red)),
+                }
+            });
+
+    add(_timer);
   }
 
   @override
@@ -108,6 +112,11 @@ class EndlessRunner extends FlameGame
       print("tapped");
       startGame();
     }
+  }
+
+  @override
+  void update(double dt) {
+    super.update(dt);
   }
 
   @override
