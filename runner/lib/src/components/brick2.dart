@@ -16,7 +16,6 @@ class Brick2 extends SpriteAnimationComponent
   Brick2(Vector2 position, Color color)
       : super(
           position: position,
-          size: Vector2(64, 64),
           anchor: Anchor.center,
           paint: Paint()
             ..color = color
@@ -29,6 +28,8 @@ class Brick2 extends SpriteAnimationComponent
 
   @override
   Future<void> onLoad() async {
+    print("brick2 created ${position.x}, ${position.y}");
+
     final sprite = await Flame.images.load("sprite_sheet_2.png");
     SpriteAnimationData data = SpriteAnimationData.sequenced(
       amount: 11,
@@ -39,10 +40,8 @@ class Brick2 extends SpriteAnimationComponent
     brickAnimation = SpriteAnimationComponent.fromFrameData(
       sprite,
       data,
-    )
-      ..x = 0
-      ..size = Vector2(128, 128);
-    add(RectangleHitbox(anchor: Anchor.topLeft, size: Vector2.all(128)));
+    )..size = Vector2(128, 128);
+    add(RectangleHitbox(anchor: Anchor.topLeft, size: Vector2(128, 128)));
     add(brickAnimation);
   }
 
@@ -50,14 +49,18 @@ class Brick2 extends SpriteAnimationComponent
   void onCollisionStart(
       Set<Vector2> intersectionPoints, PositionComponent other) {
     super.onCollisionStart(intersectionPoints, other);
-    print("booomn collided with brick2");
+    print(
+        "collision brick ${position.x}, ${position.y} with ${other.position.x}, ${other.position.y}");
+    ;
 
-    removeFromParent();
-    game.playState = PlayState.gameOver;
-    game.world.removeAll(game.world.children.query<Ball>());
-    game.world.removeAll(game.world.children.query<Bat>());
-    game.world.removeAll(game.world.children.query<Brick2>());
-    game.world.removeAll(game.world.children.query<Brick>());
+    if (other is Bat) {
+      removeFromParent();
+      game.playState = PlayState.gameOver;
+      game.world.removeAll(game.world.children.query<Ball>());
+      game.world.removeAll(game.world.children.query<Bat>());
+      game.world.removeAll(game.world.children.query<Brick2>());
+      game.world.removeAll(game.world.children.query<Brick>());
+    }
   }
 
   @override

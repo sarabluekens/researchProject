@@ -59,7 +59,6 @@ class EndlessRunner extends FlameGame
     camera.viewfinder.anchor = Anchor.topLeft;
     world.add(PlayArea());
     playState = PlayState.welcome;
-    //world.add(Player());
   }
 
   void startGame() async {
@@ -105,17 +104,19 @@ class EndlessRunner extends FlameGame
                       Vector2(
                         random.nextDouble() * (width - brickWidth) +
                             brickWidth / 2,
-                        (1 + 2.0) * brickHeight + 1 * brickGutter,
+                        10,
                       ),
                       Colors.red)),
                   print("timer tick, added 2nd brick"),
-                  world.add(Brick2(
-                      Vector2(
-                        random.nextDouble() * (width - brickWidth) +
-                            brickWidth / 2,
-                        (1 + 2.0) * brickHeight + 1 * brickGutter,
-                      ),
-                      Colors.green)),
+                  world.add(
+                    Brick2(
+                        Vector2(
+                          random.nextDouble() * (width - brickWidth) +
+                              brickWidth / 2,
+                          10,
+                        ),
+                        Colors.green),
+                  ),
                 },
             });
 

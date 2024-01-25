@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:runner/src/components/brick2.dart';
@@ -24,13 +26,16 @@ class Brick extends RectangleComponent
   void onCollisionStart(
       Set<Vector2> intersectionPoints, PositionComponent other) {
     super.onCollisionStart(intersectionPoints, other);
-    print("booomn collided with brick");
-    removeFromParent();
-    game.playState = PlayState.gameOver;
-    game.world.removeAll(game.world.children.query<Ball>());
-    game.world.removeAll(game.world.children.query<Bat>());
-    game.world.removeAll(game.world.children.query<Brick>());
-    game.world.removeAll(game.world.children.query<Brick2>());
+    if (other is Bat) {
+      print(
+          "collision brick ${position.x}, ${position.y} with ${other.position.x}, ${other.position.y}");
+      removeFromParent();
+      game.playState = PlayState.gameOver;
+      game.world.removeAll(game.world.children.query<Ball>());
+      game.world.removeAll(game.world.children.query<Bat>());
+      game.world.removeAll(game.world.children.query<Brick>());
+      game.world.removeAll(game.world.children.query<Brick2>());
+    }
   }
 
   @override
