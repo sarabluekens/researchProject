@@ -24,7 +24,7 @@ class EndlessRunner extends FlameGame
             height: gameHeight,
           ),
         );
-  String apiKey = dalle_key;
+  // String apiKey = dalle_key;
   final ValueNotifier<int> score = ValueNotifier<int>(0);
   final random = math.Random();
   late TimerComponent _timer;
