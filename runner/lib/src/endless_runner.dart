@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
-
+import 'package:http/http.dart';
 import 'package:flame/components.dart';
 import 'package:flame/game.dart';
 import 'package:flame/events.dart';
@@ -24,7 +24,7 @@ class EndlessRunner extends FlameGame
             height: gameHeight,
           ),
         );
-
+  String apiKey = dalle_key;
   final ValueNotifier<int> score = ValueNotifier<int>(0);
   final random = math.Random();
   late TimerComponent _timer;
@@ -44,6 +44,9 @@ class EndlessRunner extends FlameGame
       case PlayState.gameOver:
       case PlayState.won:
         overlays.add(playState.name);
+
+        //drop images here
+
         log(prompt);
       // clear intervam
       case PlayState.playing:
