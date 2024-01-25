@@ -37,29 +37,26 @@ class Animation extends FlameGame {
     camera.viewfinder.anchor = Anchor.topLeft;
 
     SpriteAnimationData data = SpriteAnimationData.sequenced(
-      amountPerRow: 2,
-      amount: 4,
+      amountPerRow: columns,
+      amount: columns * rows,
       stepTime: 0.1,
-      textureSize: Vector2(16, 18),
+      textureSize: Vector2(256 / columns, 256 / rows),
     );
     final response = await http.get(Uri.parse(spriteImage!));
     print('Image downloaded');
 
+    // download image -> flame doesnt do https
     final codec = await ui.instantiateImageCodec(response.bodyBytes);
     final frame = await codec.getNextFrame();
 
-    final image = frame.image;
+    final spriteSheet = frame.image;
     print('Image created');
 
-    final sprite = Sprite(image);
-    print('Sprite created');
-
     debugMode = true;
-    final demoImage = await Flame.images.load('sprite_sheetdemo.png');
     print('Demo image loaded');
-    print(sprite);
+
     brickAnimation = SpriteAnimationComponent.fromFrameData(
-      demoImage,
+      spriteSheet,
       data,
     )..size = Vector2(128, 128);
 
