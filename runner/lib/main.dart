@@ -1,6 +1,7 @@
 import 'package:google_fonts/google_fonts.dart';
 import 'package:runner/src/widgets/game_app.dart';
 import 'package:flutter/material.dart';
+import 'package:runner/src/widgets/input.dart';
 
 void main() {
   runApp(const NavigationBarApp());
@@ -29,20 +30,19 @@ class NavigationExample extends StatefulWidget {
 class _NavigationExampleState extends State<NavigationExample> {
   int _selectedIndex = 0;
 
-  static const List<Widget> _widgetOptions = <Widget>[
-    GameApp(),
-    Text(
+  final List<Widget> _widgetOptions = <Widget>[
+    InputScreen(),
+    // ignore: prefer_const_constructors
+    const Text(
       'Index 1: AR',
     ),
-    Text(
+    const Text(
       'Index 2: Combo',
     ),
-    Text(
+    const Text(
       'Index 3: Unity',
     ),
   ];
-
-  void _onItemTapped(int index) {}
 
   @override
   Widget build(BuildContext context) {

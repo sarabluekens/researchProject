@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:flame/components.dart';
 import 'package:flame/game.dart';
@@ -15,7 +16,8 @@ enum PlayState { welcome, playing, gameOver, won }
 
 class EndlessRunner extends FlameGame
     with HasCollisionDetection, KeyboardEvents, TapDetector, PanDetector {
-  EndlessRunner()
+  final String prompt;
+  EndlessRunner(this.prompt)
       : super(
           camera: CameraComponent.withFixedResolution(
             width: gameWidth,
@@ -42,7 +44,7 @@ class EndlessRunner extends FlameGame
       case PlayState.gameOver:
       case PlayState.won:
         overlays.add(playState.name);
-
+        log(prompt);
       // clear intervam
       case PlayState.playing:
         overlays.remove(PlayState.welcome.name);

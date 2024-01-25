@@ -7,7 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class GameApp extends StatefulWidget {
-  const GameApp({super.key});
+  final String prompt;
+  const GameApp({super.key, required this.prompt});
 
   @override
   State<GameApp> createState() => _GameAppState();
@@ -15,15 +16,18 @@ class GameApp extends StatefulWidget {
 
 class _GameAppState extends State<GameApp> {
   late final EndlessRunner game;
+  late final String prompt = widget.prompt;
 
   @override
   void initState() {
     super.initState();
-    game = EndlessRunner();
+    game = EndlessRunner(prompt);
   }
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    print('Width: ${size.width}, Height: ${size.height}');
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
@@ -46,11 +50,23 @@ class _GameAppState extends State<GameApp> {
             )),
             child: SafeArea(
               child: Padding(
-                padding: const EdgeInsets.all(16),
+                padding: const EdgeInsets.all(10),
                 child: Center(
                     child: Column(
                   children: [
-                    ScoreCard(score: game.score),
+                    Row(
+                      children: [
+                        BackButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+                          child: ScoreCard(score: game.score),
+                        ),
+                      ],
+                    ),
                     Expanded(
                       child: FittedBox(
                         child: SizedBox(
