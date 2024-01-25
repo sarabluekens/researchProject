@@ -1,13 +1,77 @@
-import 'dart:io';
+import 'dart:async';
+import 'dart:ui' as ui;
 import 'dart:convert';
+import 'package:flame/components.dart';
+import 'package:flame/flame.dart';
+import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'api_key.dart';
 import 'package:http/http.dart' as http;
-import 'package:http_parser/http_parser.dart';
 
 void main() {
   runApp(const MainApp());
+}
+
+class Animation extends FlameGame {
+  final int rows;
+  final int columns;
+  final String spriteImage;
+
+  static Future<Animation> create(int rows, int columns, String image) async {
+    // Load the image and create the animation
+    // ...
+
+    return Animation(rows, columns, image);
+  }
+
+  Animation(this.rows, this.columns, this.spriteImage);
+  late final SpriteAnimationComponent brick2;
+  SpriteAnimationComponent brickAnimation = SpriteAnimationComponent();
+
+  @override
+  FutureOr<void> onLoad() async {
+    super.onLoad();
+    print("$rows, $columns, $spriteImage");
+
+    camera.viewfinder.anchor = Anchor.topLeft;
+
+    SpriteAnimationData data = SpriteAnimationData.sequenced(
+      amountPerRow: 2,
+      amount: 4,
+      stepTime: 0.1,
+      textureSize: Vector2(16, 18),
+    );
+    final response = await http.get(Uri.parse(spriteImage!));
+    print('Image downloaded');
+
+    final codec = await ui.instantiateImageCodec(response.bodyBytes);
+    final frame = await codec.getNextFrame();
+
+    final image = frame.image;
+    print('Image created');
+
+    final sprite = Sprite(image);
+    print('Sprite created');
+
+    debugMode = true;
+    final demoImage = await Flame.images.load('sprite_sheetdemo.png');
+    print('Demo image loaded');
+    print(sprite);
+    brickAnimation = SpriteAnimationComponent.fromFrameData(
+      demoImage,
+      data,
+    )..size = Vector2(128, 128);
+
+    print('Animation component created');
+    add(brickAnimation);
+    print('Animation added to the game');
+  }
+
+  @override
+  void update(double dt) {
+    super.update(dt);
+  }
 }
 
 class MainApp extends StatefulWidget {
@@ -17,44 +81,19 @@ class MainApp extends StatefulWidget {
 }
 
 class _MainAppState extends State<MainApp> {
+  Future<Animation>? myAnimation;
+
   TextEditingController inputText = TextEditingController();
+  TextEditingController inputRows = TextEditingController();
+
+  TextEditingController inputColumns = TextEditingController();
+
   String apiKey = MyDalleKey;
   String url = "https://api.openai.com/v1/images/edits";
   String? image;
-
+  Image? spriteImage;
+  bool _showGame = false;
   Image gridTemplate = Image.asset("grid.png");
-
-  // void GetAIImages() async {
-  //   if (inputText.text.isNotEmpty) {
-  //     var data = {
-  //       "prompt": inputText.text,
-  //       "image":
-  //           "https://media.discordapp.net/attachments/1026757369390178315/1200107746905825470/grid2.png",
-  //       "n": 1,
-  //       "size": "256x256",
-  //     };
-
-  //     var res = await http.post(
-  //       Uri.parse(url),
-  //       headers: {
-  //         "Authorization": "Bearer ${apiKey}",
-  //         "Content-Type": "multipart/form-data"
-  //       },
-  //       body: jsonEncode(data),
-  //     );
-
-  //     var jsonResponse = jsonDecode(res.body);
-  //     print(jsonResponse);
-
-  //     image = jsonResponse["data"][0]["url"];
-
-  //     setState(() {
-  //       // image = image;
-  //     });
-  //   } else {
-  //     print("Please Enter Text To Generate AI image");
-  //   }
-  // }
 
   void EditAIImages() async {
     var uri = Uri.parse("https://api.openai.com/v1/images/edits");
@@ -81,9 +120,7 @@ class _MainAppState extends State<MainApp> {
 
         image = jsonResponse["data"][0]["url"];
 
-        setState(() {
-          // image = image;
-        });
+        setState(() {});
       });
     } else {
       print("Error ${res.statusCode}");
@@ -95,6 +132,11 @@ class _MainAppState extends State<MainApp> {
   }
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
@@ -102,38 +144,129 @@ class _MainAppState extends State<MainApp> {
           title: Text("Open AI DALL.E"),
         ),
         body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+          child: ListView(
             children: <Widget>[
               image != null
                   ? Image.network(image!, width: 256, height: 265)
                   : Image.asset("assets/images/grid.png",
                       width: 256, height: 256),
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: TextField(
-                  controller: inputText,
-                  decoration: InputDecoration(
-                      hintText: "Enter Text to Generate AI Image",
-                      filled: true,
-                      fillColor: Colors.blue.shade100,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: BorderSide.none,
-                      )),
-                ),
+              Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Container(
+                      width: 250,
+                      height: 70,
+                      child: TextField(
+                        controller: inputText,
+                        decoration: InputDecoration(
+                            hintText: "Enter Text to Generate AI Image",
+                            filled: true,
+                            fillColor: Colors.blue.shade100,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: BorderSide.none,
+                            )),
+                      ),
+                    ),
+                  ),
+                  Container(
+                    width: 70,
+                    height: 70,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        EditAIImages();
+                      },
+                      child: Text("Generate animation"),
+                    ),
+                  ),
+                ],
               ),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Container(
+                    width: 70,
+                    height: 70,
+                    child: TextField(
+                      controller: inputRows,
+                      decoration: InputDecoration(
+                          hintText: "Rows",
+                          filled: true,
+                          fillColor: Colors.blue.shade100,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide.none,
+                          )),
+                      keyboardType: TextInputType.number,
+                      inputFormatters: <TextInputFormatter>[
+                        FilteringTextInputFormatter.digitsOnly
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                    child: Container(
+                      width: 100,
+                      height: 70,
+                      child: TextField(
+                        controller: inputColumns,
+                        decoration: InputDecoration(
+                            hintText: "Columns",
+                            filled: true,
+                            fillColor: Colors.blue.shade100,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: BorderSide.none,
+                            )),
+                        keyboardType: TextInputType.number,
+                        inputFormatters: <TextInputFormatter>[
+                          FilteringTextInputFormatter.digitsOnly
+                        ],
+                      ),
+                    ),
+                  ),
+                  Container(
+                    width: 150,
+                    height: 70,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        setState(() {
+                          _showGame = true;
+                          myAnimation = Animation.create(
+                            int.parse(inputRows.text),
+                            int.parse(inputColumns.text),
+                            image!,
+                          );
+                        });
+                      },
+                      child: Text("Generate animation"),
+                    ),
+                  ),
+                ],
+              ),
+              if (_showGame)
+                FutureBuilder<Animation>(
+                  future: myAnimation,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return CircularProgressIndicator(); // Show a loading spinner
+                    } else if (snapshot.hasError) {
+                      return Text('Error: ${snapshot.error}');
+                    } else {
+                      return Container(
+                        width: 100, // Set the width of the game
+                        height: 100,
+                        child: GameWidget(game: snapshot.data!),
+                      );
+                    }
+                  },
+                ),
             ],
           ),
         ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            EditAIImages();
-          },
-          tooltip: 'Generate AI Image',
-          child: const Icon(Icons.add),
-        ), // This trailing comma makes auto-formatting nicer for build methods.
       ),
+      // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }

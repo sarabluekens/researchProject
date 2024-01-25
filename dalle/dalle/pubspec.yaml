@@ -10,6 +10,9 @@ dependencies:
   flutter:
     sdk: flutter
   http:
+  flame: ^1.14.0
+  flutter_animate: ^4.4.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

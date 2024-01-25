@@ -51,7 +51,6 @@ class Brick2 extends SpriteAnimationComponent
     super.onCollisionStart(intersectionPoints, other);
     print(
         "collision brick ${position.x}, ${position.y} with ${other.position.x}, ${other.position.y}");
-    ;
 
     if (other is Bat) {
       removeFromParent();
