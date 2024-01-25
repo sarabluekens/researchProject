@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:developer';
-import 'package:http/http.dart';
 import 'package:flame/components.dart';
 import 'package:flame/game.dart';
 import 'package:flame/events.dart';
@@ -16,8 +15,10 @@ enum PlayState { welcome, playing, gameOver, won }
 
 class EndlessRunner extends FlameGame
     with HasCollisionDetection, KeyboardEvents, TapDetector, PanDetector {
-  final String prompt;
-  EndlessRunner(this.prompt)
+  final int rows;
+  final int columns;
+  final String spriteImage;
+  EndlessRunner(this.rows, this.columns, this.spriteImage)
       : super(
           camera: CameraComponent.withFixedResolution(
             width: gameWidth,
@@ -47,7 +48,7 @@ class EndlessRunner extends FlameGame
 
         //drop images here
 
-        log(prompt);
+        log(" variables: $columns, $spriteImage, $rows");
       // clear intervam
       case PlayState.playing:
         overlays.remove(PlayState.welcome.name);
@@ -95,6 +96,9 @@ class EndlessRunner extends FlameGame
           random.nextDouble() * (width - brickWidth) + brickWidth / 2,
           (1 + 2.0) * brickHeight + 1 * brickGutter,
         ),
+        rows,
+        columns,
+        spriteImage,
         Colors.red));
 
     _timer = TimerComponent(
@@ -111,6 +115,9 @@ class EndlessRunner extends FlameGame
                             brickWidth / 2,
                         10,
                       ),
+                      rows,
+                      columns,
+                      spriteImage,
                       Colors.red)),
                   print("timer tick, added 2nd brick"),
                   world.add(

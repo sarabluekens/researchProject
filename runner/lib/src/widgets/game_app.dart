@@ -7,8 +7,16 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class GameApp extends StatefulWidget {
-  final String prompt;
-  const GameApp({super.key, required this.prompt});
+  final int rows;
+  final int columns;
+  final String spriteImage;
+
+  // static Future<GameApp> create(
+  //     int rows, int columns, String spriteImage) async {
+  //   return GameApp(rows, columns, spriteImage);
+  // }
+
+  GameApp(this.rows, this.columns, this.spriteImage);
 
   @override
   State<GameApp> createState() => _GameAppState();
@@ -16,12 +24,16 @@ class GameApp extends StatefulWidget {
 
 class _GameAppState extends State<GameApp> {
   late final EndlessRunner game;
-  late final String prompt = widget.prompt;
+  // late final String prompt = widget.prompt;
 
   @override
   void initState() {
     super.initState();
-    game = EndlessRunner(prompt);
+    game = EndlessRunner(
+      widget.rows,
+      widget.columns,
+      widget.spriteImage,
+    );
   }
 
   @override

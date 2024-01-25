@@ -1,5 +1,3 @@
-import 'package:google_fonts/google_fonts.dart';
-import 'package:runner/src/widgets/game_app.dart';
 import 'package:flutter/material.dart';
 import 'package:runner/src/widgets/input.dart';
 
