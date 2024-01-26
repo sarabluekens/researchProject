@@ -50,6 +50,7 @@
 //   }
 // }
 
+import 'dart:async';
 import 'dart:math';
 
 import 'package:flame/game.dart';
@@ -96,7 +97,7 @@ class _ARScreenState extends State<ArScreen> {
             onArCoreViewCreated: _onArCoreViewCreated,
             enablePlaneRenderer: true,
             enableTapRecognizer: true,
-            enableUpdateListener: true,
+            enableUpdateListener: false,
           ),
           if (!isARViewReady)
             Center(
@@ -136,16 +137,24 @@ class _ARScreenState extends State<ArScreen> {
   void _handleOnPlaneTap(List<ArCoreHitTestResult> hits) {
     print("tapped on plane");
     final hit = hits.first;
-    final pose = hit.pose;
-
-    print("${pose.rotation} and ${pose.translation}");
-
-    final node = ArCoreNode(
-      shape: cubeRenderable,
-      position: pose.translation,
-      rotation: pose.rotation,
+    final cube = ArCoreCube(
+      size: Vector3(0.1, 0.1, 0.1),
+      materials: [ArCoreMaterial(color: Colors.red)],
     );
-    arCoreController.addArCoreNode(node);
+
+    Timer.periodic(Duration(milliseconds: 100), (timer) {
+      final node = ArCoreNode(
+        shape: cube,
+        position: hit.pose.translation +
+            Vector3(
+                0,
+                0,
+                -timer.tick *
+                    0.01), // Move the cube towards the camera over time
+        rotation: hit.pose.rotation,
+      );
+      arCoreController.addArCoreNode(node);
+    });
   }
 
   @override
