@@ -14,6 +14,7 @@ dependencies:
   google_fonts: ^6.1.0
   http:
   arcore_flutter_plugin: ^0.1.0
+  vector_math: ^2.1.0
 
 dev_dependencies:
   flutter_test:
