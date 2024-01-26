@@ -50,116 +50,151 @@
 //   }
 // }
 
-import 'dart:async';
-import 'dart:math';
+/////////////////////////////////////////////////
 
-import 'package:flame/game.dart';
+// import 'dart:async';
+// import 'dart:math';
+
+// import 'package:flame/game.dart';
+// import 'package:flutter/material.dart';
+// import 'package:arcore_flutter_plugin/arcore_flutter_plugin.dart';
+
+// class ArScreen extends StatefulWidget {
+//   @override
+//   _ARScreenState createState() => _ARScreenState();
+// }
+
+// class _ARScreenState extends State<ArScreen> {
+//   late ArCoreCube cubeRenderable;
+//   late ArCoreController arCoreController;
+
+//   @override
+//   void initState() {
+//     super.initState();
+//     initializeModels();
+//   }
+
+//   void initializeModels() {
+//     cubeRenderable = ArCoreCube(
+//       materials: [
+//         ArCoreMaterial(
+//           color: Color.fromARGB(255, 255, 0, 0),
+//         ),
+//       ],
+//       size: Vector3(50, 50, 50),
+//     );
+//   }
+
+//   bool isARViewReady = false;
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: Text('AR App'),
+//       ),
+//       body: Stack(
+//         children: [
+//           ArCoreView(
+//             onArCoreViewCreated: _onArCoreViewCreated,
+//             enablePlaneRenderer: true,
+//             enableTapRecognizer: true,
+//             enableUpdateListener: false,
+//           ),
+//           if (!isARViewReady)
+//             Center(
+//               child: CircularProgressIndicator(),
+//             ),
+//         ],
+//       ),
+//     );
+//   }
+
+//   void _onArCoreViewCreated(ArCoreController controller) {
+//     print("onArCoreViewCreated (plane)");
+//     arCoreController = controller;
+//     _setupTapGesture();
+//     _setupPlaneDetection();
+//     // Notify that the AR view is ready
+//     setState(() {
+//       isARViewReady = true;
+//     });
+//   }
+
+//   void _setupTapGesture() {
+//     arCoreController.onPlaneTap = _handleOnPlaneTap;
+//     print("onPlaneTap set");
+//   }
+
+//   void _setupPlaneDetection() {
+//     arCoreController.onPlaneDetected = _handleOnPlaneDetected;
+//     print("onPlaneDetected set");
+//   }
+
+//   void _handleOnPlaneDetected(ArCorePlane plane) {
+//     print("Plane detected: ${plane.type}");
+//     // Handle the plane detection event here
+//   }
+
+//   void _handleOnPlaneTap(List<ArCoreHitTestResult> hits) {
+//     print("tapped on plane");
+//     final hit = hits.first;
+//     final cube = ArCoreCube(
+//       size: Vector3(0.1, 0.1, 0.1),
+//       materials: [ArCoreMaterial(color: Colors.red)],
+//     );
+
+//     Timer.periodic(Duration(milliseconds: 100), (timer) {
+//       final node = ArCoreNode(
+//         shape: cube,
+//         position: hit.pose.translation +
+//             Vector3(
+//                 0,
+//                 0,
+//                 -timer.tick *
+//                     0.01), // Move the cube towards the camera over time
+//         rotation: hit.pose.rotation,
+//       );
+//       arCoreController.addArCoreNode(node);
+//     });
+//   }
+
+//   @override
+//   void dispose() {
+//     arCoreController.dispose();
+//     super.dispose();
+//   }
+// }
+
+import 'package:ar_flutter_plugin/ar_flutter_plugin.dart';
 import 'package:flutter/material.dart';
-import 'package:arcore_flutter_plugin/arcore_flutter_plugin.dart';
 
 class ArScreen extends StatefulWidget {
   @override
-  _ARScreenState createState() => _ARScreenState();
+  _arScreenState createState() => _arScreenState();
 }
 
-class _ARScreenState extends State<ArScreen> {
-  late ArCoreCube cubeRenderable;
-  late ArCoreController arCoreController;
-
-  @override
-  void initState() {
-    super.initState();
-    initializeModels();
-  }
-
-  void initializeModels() {
-    cubeRenderable = ArCoreCube(
-      materials: [
-        ArCoreMaterial(
-          color: Color.fromARGB(255, 255, 0, 0),
-        ),
-      ],
-      size: Vector3(50, 50, 50),
-    );
-  }
-
-  bool isARViewReady = false;
+class _arScreenState extends State<ArScreen> {
+  ARCoreController arCoreController;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('AR App'),
-      ),
-      body: Stack(
-        children: [
-          ArCoreView(
-            onArCoreViewCreated: _onArCoreViewCreated,
-            enablePlaneRenderer: true,
-            enableTapRecognizer: true,
-            enableUpdateListener: false,
-          ),
-          if (!isARViewReady)
-            Center(
-              child: CircularProgressIndicator(),
-            ),
-        ],
+      appBar: AppBar(title: const Text('AR Flutter Plugin Example')),
+      body: ARView(
+        onARViewCreated: onARViewCreated,
+        planeDetectionConfig: PlaneDetectionConfig.horizontalAndVertical,
       ),
     );
   }
 
-  void _onArCoreViewCreated(ArCoreController controller) {
-    print("onArCoreViewCreated (plane)");
-    arCoreController = controller;
-    _setupTapGesture();
-    _setupPlaneDetection();
-    // Notify that the AR view is ready
-    setState(() {
-      isARViewReady = true;
-    });
+  void onARViewCreated(ARCoreController arCoreController) {
+    this.arCoreController = arCoreController;
+    this.arCoreController.onPlaneOrPointTapped = onPlaneOrPointTapped;
   }
 
-  void _setupTapGesture() {
-    arCoreController.onPlaneTap = _handleOnPlaneTap;
-    print("onPlaneTap set");
-  }
-
-  void _setupPlaneDetection() {
-    arCoreController.onPlaneDetected = _handleOnPlaneDetected;
-    print("onPlaneDetected set");
-  }
-
-  void _handleOnPlaneDetected(ArCorePlane plane) {
-    print("Plane detected: ${plane.type}");
-    // Handle the plane detection event here
-  }
-
-  void _handleOnPlaneTap(List<ArCoreHitTestResult> hits) {
-    print("tapped on plane");
+  void onPlaneOrPointTapped(List<ARHitTestResult> hits) {
     final hit = hits.first;
-    final cube = ArCoreCube(
-      size: Vector3(0.1, 0.1, 0.1),
-      materials: [ArCoreMaterial(color: Colors.red)],
-    );
-
-    Timer.periodic(Duration(milliseconds: 100), (timer) {
-      final node = ArCoreNode(
-        shape: cube,
-        position: hit.pose.translation +
-            Vector3(
-                0,
-                0,
-                -timer.tick *
-                    0.01), // Move the cube towards the camera over time
-        rotation: hit.pose.rotation,
-      );
-      arCoreController.addArCoreNode(node);
-    });
-  }
-
-  @override
-  void dispose() {
-    arCoreController.dispose();
-    super.dispose();
+    // Add your code to handle the tap event here
   }
 }
