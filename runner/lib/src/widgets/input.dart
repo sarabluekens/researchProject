@@ -79,7 +79,7 @@ class _InputScreenState extends State<InputScreen> {
                   ? Image.network(image!, width: 256, height: 265)
                   : Image.asset("assets/images/grid.png",
                       width: 256, height: 256),
-              Row(
+              Column(
                 children: [
                   Padding(
                     padding: const EdgeInsets.all(16.0),
@@ -99,28 +99,34 @@ class _InputScreenState extends State<InputScreen> {
                       ),
                     ),
                   ),
-                  Container(
-                    width: 70,
-                    height: 70,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        EditAIImages();
-                      },
-                      child: Text("Generate image"),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Container(
+                      width: 300,
+                      height: 50,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          EditAIImages();
+                        },
+                        child: Text("Generate image"),
+                      ),
                     ),
                   ),
                 ],
               ),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Container(
-                    width: 70,
+                    margin: EdgeInsets.all(10),
+                    width: 100,
                     height: 70,
                     child: TextField(
                       controller: inputRows,
+                      textAlign: TextAlign.center,
                       decoration: InputDecoration(
-                          hintText: "Rows",
+                          hintText: "#Rows",
                           filled: true,
                           fillColor: Colors.blue.shade100,
                           border: OutlineInputBorder(
@@ -140,8 +146,9 @@ class _InputScreenState extends State<InputScreen> {
                       height: 70,
                       child: TextField(
                         controller: inputColumns,
+                        textAlign: TextAlign.center,
                         decoration: InputDecoration(
-                            hintText: "Columns",
+                            hintText: "#Columns",
                             filled: true,
                             fillColor: Colors.blue.shade100,
                             border: OutlineInputBorder(
@@ -155,90 +162,30 @@ class _InputScreenState extends State<InputScreen> {
                       ),
                     ),
                   ),
-                  Container(
-                    width: 150,
-                    height: 70,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => GameApp(
-                                    int.parse(inputRows.text),
-                                    int.parse(inputColumns.text),
-                                    image!,
-                                  )),
-                        );
-                        // setState(() {
-                        //   _showGame = true;
-                        //   myAnimation = Animation.create(
-                        //     int.parse(inputRows.text),
-                        //     int.parse(inputColumns.text),
-                        //     image!,
-                        //   );
-                        // });
-                      },
-                      child: Text("play game"),
-                    ),
-                  ),
                 ],
               ),
-              // if (_showGame)
-              //   FutureBuilder<Animation>(
-              //     future: myAnimation,
-              //     builder: (context, snapshot) {
-              //       if (snapshot.connectionState == ConnectionState.waiting) {
-              //         return CircularProgressIndicator(); // Show a loading spinner
-              //       } else if (snapshot.hasError) {
-              //         return Text('Error: ${snapshot.error}');
-              //       } else {
-              //         return Container(
-              //           width: 100, // Set the width of the game
-              //           height: 100,
-              //           child: GameWidget(game: snapshot.data!),
-              //         );
-              //       }
-              //     },
-              //   ),
+              Container(
+                width: 150,
+                height: 50,
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => GameApp(
+                                int.parse(inputRows.text),
+                                int.parse(inputColumns.text),
+                                image!,
+                              )),
+                    );
+                  },
+                  child: Text("play game"),
+                ),
+              ),
             ],
           ),
         ),
       ),
-      // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
-
-
-//  return Scaffold(
-    //   appBar: AppBar(title: const Text("Obstacle prompt")),
-    //   body: Center(
-    //     child: Column(
-    //       mainAxisAlignment: MainAxisAlignment.center,
-    //       children: <Widget>[
-    //         Padding(
-    //           padding: const EdgeInsets.all(8.0),
-    //           child: TextField(
-    //             controller: _controller,
-    //             decoration: InputDecoration(
-    //               border: OutlineInputBorder(),
-    //               labelText: '"What obstacles would you like to see?"',
-    //             ),
-    //           ),
-    //         ),
-    //         ElevatedButton(
-    //           onPressed: () {
-    //             Navigator.push(
-    //               context,
-    //               MaterialPageRoute(
-    //                   builder: (context) => GameApp(
-    //                         prompt: _controller.text,
-    //                       )),
-    //             );
-    //           },
-    //           child: const Text('Submit'),
-    //         ),
-    //       ],
-    //     ),
-    //   ),
-    // );

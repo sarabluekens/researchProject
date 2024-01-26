@@ -149,6 +149,12 @@ class EndlessRunner extends FlameGame
 
   @override
   void update(double dt) {
+    if (playState == PlayState.playing) {
+      // In this code, Duration.zero means the future will run as soon as possible, but not immediately, allowing the build phase to complete before the score is updated.
+      Future.delayed(Duration.zero, () {
+        score.value += 1;
+      });
+    }
     super.update(dt);
   }
 

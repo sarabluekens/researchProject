@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:http/http.dart' as http;
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
-import 'package:flame/flame.dart';
 import 'package:runner/src/components/brick2.dart';
 import 'package:runner/src/components/components.dart';
 import 'package:runner/src/config.dart';
@@ -20,16 +19,16 @@ class Brick extends RectangleComponent
       Vector2 position, this.rows, this.columns, this.spriteImage, Color color)
       : super(
             position: position,
-            size: Vector2(brickWidth, brickHeight),
+            size: Vector2(256, 256),
             anchor: Anchor.center,
             paint: Paint()
               ..color = color
               ..style = PaintingStyle.fill,
-            children: [RectangleHitbox()]);
+            children: [RectangleHitbox(size: Vector2(128, 128))]);
 
   double speed = obstacleSpeed;
 
-  ////
+  //Animation//
   late final SpriteAnimationComponent brick;
   SpriteAnimationComponent brick1Animation = SpriteAnimationComponent();
 
@@ -41,7 +40,7 @@ class Brick extends RectangleComponent
       amountPerRow: columns,
       amount: columns * rows,
       stepTime: 0.1,
-      textureSize: Vector2(256 / columns, 256 / rows),
+      textureSize: Vector2(265 / columns, 256 / rows),
     );
     final response = await http.get(Uri.parse(spriteImage!));
     print('Image downloaded');
@@ -59,14 +58,14 @@ class Brick extends RectangleComponent
     brick1Animation = SpriteAnimationComponent.fromFrameData(
       spriteSheet,
       data,
-    )..size = Vector2(128, 128);
+    )..size = Vector2(256, 256);
 
     print('Animation component created');
     add(brick1Animation);
     print('Animation added to the game');
   }
 
-  //////
+  ///end Animation///
 
   @override
   void onCollisionStart(

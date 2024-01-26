@@ -11,11 +11,6 @@ class GameApp extends StatefulWidget {
   final int columns;
   final String spriteImage;
 
-  // static Future<GameApp> create(
-  //     int rows, int columns, String spriteImage) async {
-  //   return GameApp(rows, columns, spriteImage);
-  // }
-
   GameApp(this.rows, this.columns, this.spriteImage);
 
   @override
