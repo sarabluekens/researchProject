@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:runner/src/widgets/ARscreen.dart';
 import 'package:runner/src/widgets/input.dart';
 
 void main() {
@@ -31,9 +32,7 @@ class _NavigationExampleState extends State<NavigationExample> {
   final List<Widget> _widgetOptions = <Widget>[
     InputScreen(),
     // ignore: prefer_const_constructors
-    const Text(
-      'Index 1: AR',
-    ),
+    ArScreen(),
     const Text(
       'Index 2: Combo',
     ),

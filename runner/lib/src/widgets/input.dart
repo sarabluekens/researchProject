@@ -70,7 +70,7 @@ class _InputScreenState extends State<InputScreen> {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: Text("Open AI DALL.E"),
+          title: Text("Set up your game"),
         ),
         body: Center(
           child: ListView(
