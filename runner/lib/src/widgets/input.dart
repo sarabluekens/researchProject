@@ -16,7 +16,6 @@ class InputScreen extends StatefulWidget {
 
 class _InputScreenState extends State<InputScreen> {
   //Dalle-vars
-  final TextEditingController _controller = TextEditingController();
   Future<Animation>? myAnimation;
 
   TextEditingController inputText = TextEditingController();

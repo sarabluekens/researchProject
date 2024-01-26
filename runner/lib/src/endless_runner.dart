@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
+import 'dart:ffi';
 import 'package:flame/components.dart';
 import 'package:flame/game.dart';
 import 'package:flame/events.dart';
@@ -100,36 +101,42 @@ class EndlessRunner extends FlameGame
         columns,
         spriteImage,
         Colors.red));
+    List<int> lanes = [170, 410, 650];
 
     _timer = TimerComponent(
-        period: 3,
+        period: 3.0,
         repeat: true,
         removeOnFinish: true,
         onTick: () => {
               if (playState == PlayState.playing)
                 {
+                  print(lanes[random.nextInt(3)].toDouble()),
                   print("timer tick, added brick"),
-                  world.add(Brick(
-                      Vector2(
-                        random.nextDouble() * (width - brickWidth) +
-                            brickWidth / 2,
-                        10,
+                  if (random.nextBool())
+                    {
+                      world.add(Brick(
+                          Vector2(
+                            lanes[random.nextInt(3)].toDouble(),
+                            10,
+                          ),
+                          rows,
+                          columns,
+                          spriteImage,
+                          Colors.red)),
+                      print("timer tick, added 2nd brick"),
+                    }
+                  else
+                    {
+                      world.add(
+                        Brick2(
+                            Vector2(
+                              lanes[random.nextInt(3)].toDouble(),
+                              10,
+                            ),
+                            Colors.green),
                       ),
-                      rows,
-                      columns,
-                      spriteImage,
-                      Colors.red)),
-                  print("timer tick, added 2nd brick"),
-                  world.add(
-                    Brick2(
-                        Vector2(
-                          random.nextDouble() * (width - brickWidth) +
-                              brickWidth / 2,
-                          10,
-                        ),
-                        Colors.green),
-                  ),
-                },
+                    },
+                }
             });
 
     add(_timer);
@@ -178,6 +185,10 @@ class EndlessRunner extends FlameGame
           print("swiped blocked");
         }
       }
+    } else {
+      world.removeAll(world.children.query<Ball>());
+      world.removeAll(world.children.query<Bat>());
+      world.removeAll(world.children.query<Brick>());
     }
   }
 

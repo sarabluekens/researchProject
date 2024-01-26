@@ -39,7 +39,7 @@ class Brick extends RectangleComponent
       amountPerRow: columns,
       amount: columns * rows,
       stepTime: 0.1,
-      textureSize: Vector2(265 / columns, 128 / rows),
+      textureSize: Vector2(265 / columns, 265 / rows),
     );
     final response = await http.get(Uri.parse(spriteImage!));
     print('Image downloaded');

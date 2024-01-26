@@ -23,6 +23,8 @@ class Brick2 extends SpriteAnimationComponent
         );
 
   double speed = obstacleSpeed;
+
+  //Animation//
   late final SpriteAnimationComponent brick2;
   SpriteAnimationComponent brickAnimation = SpriteAnimationComponent();
 
