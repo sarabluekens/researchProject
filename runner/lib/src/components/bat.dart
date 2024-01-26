@@ -51,7 +51,7 @@ class Bat extends PositionComponent
     print(
         "collision brick ${position.x}, ${position.y} with ${other.position.x}, ${other.position.y}");
 
-    if (other is Bat) {
+    if (other is Brick || other is Brick2) {
       removeFromParent();
       game.playState = PlayState.gameOver;
       game.world.removeAll(game.world.children.query<Ball>());

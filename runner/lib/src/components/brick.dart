@@ -18,13 +18,12 @@ class Brick extends RectangleComponent
   Brick(
       Vector2 position, this.rows, this.columns, this.spriteImage, Color color)
       : super(
-            position: position,
-            size: Vector2(256, 256),
-            anchor: Anchor.center,
-            paint: Paint()
-              ..color = color
-              ..style = PaintingStyle.fill,
-            children: [RectangleHitbox(size: Vector2(128, 128))]);
+          position: position,
+          anchor: Anchor.center,
+          paint: Paint()
+            ..color = color
+            ..style = PaintingStyle.fill,
+        );
 
   double speed = obstacleSpeed;
 
@@ -40,7 +39,7 @@ class Brick extends RectangleComponent
       amountPerRow: columns,
       amount: columns * rows,
       stepTime: 0.1,
-      textureSize: Vector2(265 / columns, 256 / rows),
+      textureSize: Vector2(265 / columns, 128 / rows),
     );
     final response = await http.get(Uri.parse(spriteImage!));
     print('Image downloaded');
@@ -58,9 +57,11 @@ class Brick extends RectangleComponent
     brick1Animation = SpriteAnimationComponent.fromFrameData(
       spriteSheet,
       data,
-    )..size = Vector2(256, 256);
+    )..size = Vector2(128, 128);
 
-    print('Animation component created');
+    print('Animation component created, ${brick1Animation.size}');
+    add(RectangleHitbox(anchor: Anchor.topLeft, size: Vector2(128, 128)));
+
     add(brick1Animation);
     print('Animation added to the game');
   }

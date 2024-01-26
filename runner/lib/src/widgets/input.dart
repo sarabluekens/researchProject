@@ -34,7 +34,8 @@ class _InputScreenState extends State<InputScreen> {
     var uri = Uri.parse("https://api.openai.com/v1/images/edits");
     var request = http.MultipartRequest('POST', uri)
       ..headers['Authorization'] = "Bearer ${apiKey}"
-      ..fields['prompt'] = inputText.text
+      ..fields['prompt'] =
+          "this images has 4 sprites. They each show one frame in the animation of a ${inputText.text}, the sprites are all the exact same hight and the exact same width ,I will use these images to create a GIF animation,  spritesheet"
       ..fields['n'] = "1"
       ..fields['size'] = "256x256";
 
