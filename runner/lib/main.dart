@@ -32,7 +32,7 @@ class _NavigationExampleState extends State<NavigationExample> {
   final List<Widget> _widgetOptions = <Widget>[
     InputScreen(),
     // ignore: prefer_const_constructors
-    ArScreen(),
+    ObjectsOnPlanesWidget(),
     const Text(
       'Index 2: Combo',
     ),

@@ -26,3 +26,6 @@ flutter:
   uses-material-design: true
   assets:
     - assets/images/
+    - assets/models/
+    - Models/Chicken_01/
+    - assets/models/rubber_duck/
