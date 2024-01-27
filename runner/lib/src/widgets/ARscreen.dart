@@ -99,7 +99,8 @@ class _ARScreenState extends State<ArScreen> {
             onArCoreViewCreated: _onArCoreViewCreated,
             enablePlaneRenderer: true,
             enableTapRecognizer: true,
-            enableUpdateListener: false,
+            enableUpdateListener: true,
+            type: ArCoreViewType.STANDARDVIEW,
           ),
           if (!isARViewReady)
             Center(
@@ -137,13 +138,14 @@ class _ARScreenState extends State<ArScreen> {
   }
 
   void _handleOnPlaneTap(List<ArCoreHitTestResult> hits) {
+    int countTap = 0;
     print("tapped on plane");
     final hit = hits.first;
     final cube = ArCoreCube(
       size: Vector3(0.1, 0.1, 0.1),
       materials: [ArCoreMaterial(color: Colors.red)],
     );
-
+    countTap++;
     Timer.periodic(Duration(milliseconds: 100), (timer) {
       final node = ArCoreNode(
         shape: cube,
@@ -157,11 +159,14 @@ class _ARScreenState extends State<ArScreen> {
         name: "cube$count",
       );
       arCoreController.addArCoreNode(node);
+      print("${node.name} addded");
+      print(arCoreController.toString());
+
       count++;
 
       Future.delayed(Duration(milliseconds: 100), () {
         arCoreController.removeNode(nodeName: "cube${count - 2}");
-        print("cube removed");
+        print("${node.name} removed");
       });
     });
   }

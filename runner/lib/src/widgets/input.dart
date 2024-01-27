@@ -14,6 +14,8 @@ class InputScreen extends StatefulWidget {
   _InputScreenState createState() => _InputScreenState();
 }
 
+bool isLoading = false;
+
 class _InputScreenState extends State<InputScreen> {
   //Dalle-vars
   Future<Animation>? myAnimation;
@@ -30,6 +32,9 @@ class _InputScreenState extends State<InputScreen> {
   Image gridTemplate = Image.asset("grid.png");
   //
   void EditAIImages() async {
+    setState(() {
+      isLoading = true;
+    });
     var uri = Uri.parse("https://api.openai.com/v1/images/edits");
     var request = http.MultipartRequest('POST', uri)
       ..headers['Authorization'] = "Bearer ${apiKey}"
@@ -58,7 +63,9 @@ class _InputScreenState extends State<InputScreen> {
 
         image = jsonResponse["data"][0]["url"];
 
-        setState(() {});
+        setState(() {
+          isLoading = false;
+        });
       });
     } else {
       print("Error ${res.statusCode}");
@@ -75,10 +82,11 @@ class _InputScreenState extends State<InputScreen> {
         body: Center(
           child: ListView(
             children: <Widget>[
-              image != null
+              image != null && !isLoading
                   ? Image.network(image!, width: 256, height: 265)
                   : Image.asset("assets/images/grid.png",
                       width: 256, height: 256),
+              isLoading ? CircularProgressIndicator() : Container(),
               Column(
                 children: [
                   Padding(
