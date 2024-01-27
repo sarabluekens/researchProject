@@ -165,17 +165,130 @@
 //     super.dispose();
 //   }
 // }
+////////////////////////////////////////////
+// import 'package:ar_flutter_plugin/ar_flutter_plugin.dart';
+// import 'package:flutter/material.dart';
 
-import 'package:ar_flutter_plugin/ar_flutter_plugin.dart';
+// class ArScreen extends StatefulWidget {
+//   @override
+//   _arScreenState createState() => _arScreenState();
+// }
+
+// class _arScreenState extends State<ArScreen> {
+//   ARCoreController arCoreController;
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(title: const Text('AR Flutter Plugin Example')),
+//       body: ARView(
+//         onARViewCreated: onARViewCreated,
+//         planeDetectionConfig: PlaneDetectionConfig.horizontalAndVertical,
+//       ),
+//     );
+//   }
+
+//   void onARViewCreated(ARCoreController arCoreController) {
+//     this.arCoreController = arCoreController;
+//     this.arCoreController.onPlaneOrPointTapped = onPlaneOrPointTapped;
+//   }
+
+//   void onPlaneOrPointTapped(List<ARHitTestResult> hits) {
+//     final hit = hits.first;
+//     // Add your code to handle the tap event here
+//   }
+// }
+
+// import 'package:flutter/material.dart';
+// import 'package:arcore_flutter_plugin/arcore_flutter_plugin.dart';
+// import 'package:vector_math/vector_math_64.dart' hide Colors;
+
+// class ArScreen extends StatefulWidget {
+//   @override
+//   _ARScreenState createState() => _ARScreenState();
+// }
+
+// class _ARScreenState extends State<ArScreen> {
+//   late ArCoreController arCoreController;
+
+//   void _onArCoreViewCreated(ArCoreController controller) {
+//     arCoreController = controller;
+
+//     // Add AR content setup here
+//     final cube = ArCoreCube(
+//       materials: [ArCoreMaterial(color: Colors.blue)],
+//       size: Vector3(0.5, 0.5, 0.5),
+//     );
+
+//     final cubeNode = ArCoreNode(shape: cube);
+//     arCoreController.addArCoreNode(cubeNode);
+//   }
+
+//   void _createCube(ArCoreHitTestResult plane) {
+//     final cube = ArCoreCube(
+//       materials: [ArCoreMaterial(color: Colors.blue)],
+//       size: Vector3(0.5, 0.5, 0.5),
+//     );
+
+//     final cubeNode = ArCoreNode(
+//       shape: cube,
+//       position: plane.pose.translation,
+//     );
+//     arCoreController.addArCoreNode(cubeNode);
+//     Future.delayed(Duration(milliseconds: 100), () {
+//       arCoreController.removeNode(nodeName: cubeNode.name);
+//     });
+//   }
+
+//   void _onTapArView(List<ArCoreHitTestResult> hits) {
+//     // Handle tap events on the AR view
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: Text('AR App'),
+//       ),
+//       body: ArCoreView(
+//         onArCoreViewCreated: _onArCoreViewCreated,
+//         enableTapRecognizer: true,
+//         // onTap: _onTapArView,
+//       ),
+//     );
+//   }
+
+//   @override
+//   void dispose() {
+//     arCoreController.dispose();
+//     super.dispose();
+//   }
+// }
+
+import 'dart:async';
+import 'package:ar_flutter_plugin/models/ar_hittest_result.dart';
+import 'package:arcore_flutter_plugin/arcore_flutter_plugin.dart';
 import 'package:flutter/material.dart';
+import 'package:ar_flutter_plugin/ar_flutter_plugin.dart';
+import 'package:vector_math/vector_math_64.dart' as vector;
 
 class ArScreen extends StatefulWidget {
   @override
-  _arScreenState createState() => _arScreenState();
+  _ArScreenState createState() => _ArScreenState();
 }
 
-class _arScreenState extends State<ArScreen> {
-  ARCoreController arCoreController;
+class _ArScreenState extends State<ArScreen> {
+  late ArCoreController arCoreController;
+  late Timer _timer;
+  late vector.Vector3 _cubePosition;
+  late vector.Vector3 _cameraPosition;
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    arCoreController?.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -188,13 +301,50 @@ class _arScreenState extends State<ArScreen> {
     );
   }
 
-  void onARViewCreated(ARCoreController arCoreController) {
+  void onARViewCreated(ArCoreController arCoreController) {
     this.arCoreController = arCoreController;
     this.arCoreController.onPlaneOrPointTapped = onPlaneOrPointTapped;
+    this.arCoreController.onCameraTransformUpdate = onCameraTransformUpdate;
+  }
+
+  void onCameraTransformUpdate(Matrix4 cameraTransform) {
+    _cameraPosition = vector.Vector3.zero();
+    cameraTransform.getTranslation(_cameraPosition);
   }
 
   void onPlaneOrPointTapped(List<ARHitTestResult> hits) {
     final hit = hits.first;
-    // Add your code to handle the tap event here
+    _cubePosition = hit.worldTransform.getTranslation();
+    _timer =
+        Timer.periodic(Duration(seconds: 5), (timer) => createMovingCube());
+  }
+
+  void createMovingCube() {
+    final cube = ArCoreCube(
+      materials: [ArCoreMaterial(color: Colors.blue)],
+      size: vector.Vector3(0.1, 0.1, 0.1),
+    );
+
+    final cubeNode = ArCoreNode(
+      shape: cube,
+      position: _cubePosition,
+      name: 'cubeNode',
+    );
+
+    arCoreController.addArCoreNode(cubeNode);
+
+    Future.delayed(Duration(milliseconds: 100), () {
+      moveCubeTowardsCamera();
+    });
+  }
+
+  void moveCubeTowardsCamera() {
+    final direction = _cameraPosition - _cubePosition;
+    final speed = 0.01;
+    final movement = direction.normalized() * speed;
+    _cubePosition += movement;
+
+    arCoreController.removeNode(nodeName: 'cubeNode');
+    createMovingCube();
   }
 }
