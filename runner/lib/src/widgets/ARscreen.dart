@@ -136,6 +136,7 @@ class _ObjectsOnPlanesWidgetState extends State<ObjectsOnPlanesWidget> {
             if (cameraPosition != null && nodePosition != null) {
               print("both: camera: ${cameraPosition}, anchor: ${nodePosition}");
 
+              // TRESHOLD OP 0.2
               double distance = sqrt(
                   pow(cameraPosition![0] - nodePosition![0], 2) +
                       pow(cameraPosition![1] - nodePosition![1], 2) +
