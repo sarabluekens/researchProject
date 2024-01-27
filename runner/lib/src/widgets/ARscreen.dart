@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui';
 
 import 'package:ar_flutter_plugin/managers/ar_location_manager.dart';
 import 'package:ar_flutter_plugin/managers/ar_session_manager.dart';
@@ -113,9 +114,9 @@ class _ObjectsOnPlanesWidgetState extends State<ObjectsOnPlanesWidget> {
         var newNode = ARNode(
             name: "node${count}",
             type: NodeType.localGLTF2,
-            uri: "Models/Chicken_01/Chicken_01.gltf",
+            uri: "Models/Chicken_02/Chicken_02.gltf",
             scale: Vector3(1, 1, 1),
-            position: Vector3(0.0, 0.0, 0.0),
+            position: Vector3(0.0, -1.0, -10.0),
             rotation: Vector4(0.0, 1.0, 0.0, pi / 2));
         bool? didAddNodeToAnchor =
             await arObjectManager!.addNode(newNode, planeAnchor: newAnchor);
@@ -143,6 +144,10 @@ class _ObjectsOnPlanesWidgetState extends State<ObjectsOnPlanesWidget> {
                       pow(cameraPosition![2] - nodePosition![2], 2));
 
               print("distance: ${distance}");
+              if (distance < 1.0) {
+                print("distance is kleiner dan 0.7");
+                timer.cancel();
+              }
             } else {
               print("Error: cameraPosition or nodePosition is null");
             }
