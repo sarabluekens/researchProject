@@ -33,12 +33,6 @@ class _NavigationExampleState extends State<NavigationExample> {
     InputScreen(),
     // ignore: prefer_const_constructors
     ARScreen(),
-    const Text(
-      'Index 2: Combo',
-    ),
-    const Text(
-      'Index 3: Unity',
-    ),
   ];
 
   @override
@@ -62,14 +56,6 @@ class _NavigationExampleState extends State<NavigationExample> {
             NavigationDestination(
               icon: Icon(Icons.video_camera_back),
               label: 'AR',
-            ),
-            NavigationDestination(
-              icon: Icon(Icons.plus_one),
-              label: 'Combo',
-            ),
-            NavigationDestination(
-              icon: Icon(Icons.engineering),
-              label: 'Unity',
             ),
           ]),
       body: Center(

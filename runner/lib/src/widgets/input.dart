@@ -104,7 +104,7 @@ class _InputScreenState extends State<InputScreen> {
                     padding: const EdgeInsets.all(16.0),
                     child: Container(
                       width: 250,
-                      height: 50,
+                      height: 60,
                       child: TextField(
                         controller: inputText,
                         decoration: InputDecoration(
@@ -119,9 +119,9 @@ class _InputScreenState extends State<InputScreen> {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.all(6.0),
+                    padding: const EdgeInsets.all(4.0),
                     child: Container(
-                      width: 300,
+                      width: 200,
                       height: 50,
                       child: ElevatedButton(
                         onPressed: () {
@@ -183,22 +183,25 @@ class _InputScreenState extends State<InputScreen> {
                   ),
                 ],
               ),
-              SizedBox(
-                width: 150,
-                height: 50,
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => GameApp(
-                                int.parse(inputRows.text),
-                                int.parse(inputColumns.text),
-                                image!,
-                              )),
-                    );
-                  },
-                  child: const Text("play game"),
+              Padding(
+                padding: const EdgeInsets.all(4.0),
+                child: Container(
+                  width: 200,
+                  height: 50,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => GameApp(
+                                  int.parse(inputRows.text),
+                                  int.parse(inputColumns.text),
+                                  image!,
+                                )),
+                      );
+                    },
+                    child: const Text("play game"),
+                  ),
                 ),
               ),
             ],

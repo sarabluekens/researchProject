@@ -59,7 +59,7 @@ class EndlessRunner extends FlameGame
 
   @override
   FutureOr<void> onLoad() async {
-    debugMode = true;
+    debugMode = false;
     super.onLoad();
     //Configures the top left as the anchor for the viewfinder
     camera.viewfinder.anchor = Anchor.topLeft;
@@ -100,7 +100,7 @@ class EndlessRunner extends FlameGame
         columns,
         spriteImage,
         Colors.red));
-    List<int> lanes = [170, 410, 650];
+    List<int> lanes = [160, 400, 640];
 
     _timer = TimerComponent(
         period: 3.0,

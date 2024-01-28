@@ -13,7 +13,6 @@ import 'package:ar_flutter_plugin/datatypes/node_types.dart';
 import 'package:ar_flutter_plugin/datatypes/hittest_result_types.dart';
 import 'package:ar_flutter_plugin/models/ar_node.dart';
 import 'package:ar_flutter_plugin/models/ar_hittest_result.dart';
-import 'package:flutter/services.dart';
 import 'package:runner/src/widgets/collision.dart';
 import 'package:vector_math/vector_math_64.dart' hide Colors;
 import 'dart:math';
@@ -79,7 +78,7 @@ class _ARScreenState extends State<ARScreen> {
           showFeaturePoints: false,
           showPlanes: true,
           customPlaneTexturePath: "Images/triangle.png",
-          showWorldOrigin: true,
+          showWorldOrigin: false,
         );
     this.arObjectManager!.onInitialize();
 
@@ -145,21 +144,31 @@ class _ARScreenState extends State<ARScreen> {
                       pow(cameraPosition![2] - nodePosition![2], 2));
 
               print("distance: ${distance}");
-              if (distance < 1.0) {
+              if (distance < 1.1) {
                 print("distance is kleiner dan 0.7");
                 timer.cancel();
                 if (mounted) {
+                  timer.cancel();
+                  nodes.removeRange(0, nodes.length);
                   // C
                   Navigator.push(
                     context,
                     MaterialPageRoute(
                         builder: (context) =>
-                            Collision()), // Replace GameOverScreen with the actual class name of your game over screen
+                            const Collision()), // Replace GameOverScreen with the actual class name of your game over screen
                   );
                 }
               }
             } else {
               print("Error: cameraPosition or nodePosition is null");
+            }
+
+            if (newNode.position.z >= 10.0) {
+              // Remove the node from the arObjectManager
+              await arObjectManager!.removeNode(newNode);
+
+              // Cancel the timer
+              timer.cancel();
             }
           });
         } else {
