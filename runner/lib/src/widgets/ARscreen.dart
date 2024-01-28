@@ -111,6 +111,7 @@ class _ARScreenState extends State<ARScreen> {
       if (didAddAnchor!) {
         anchors.add(newAnchor);
         // Add note to anchor
+        //Licensed under CC-BY 3.0 by "Poly by Google" (https://poly.google.com/user/4aEd8rQgKu2)
         var newNode = ARNode(
             name: "node${count}",
             type: NodeType.localGLTF2,
