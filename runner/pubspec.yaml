@@ -13,9 +13,9 @@ dependencies:
   flutter_animate: ^4.4.0
   google_fonts: ^6.1.0
   http:
-  arcore_flutter_plugin: ^0.1.0
   vector_math: ^2.1.0
   ar_flutter_plugin: ^0.7.3
+  loading_indicator: ^3.1.1
 
 dev_dependencies:
   flutter_test:

@@ -14,16 +14,17 @@ import 'package:ar_flutter_plugin/datatypes/hittest_result_types.dart';
 import 'package:ar_flutter_plugin/models/ar_node.dart';
 import 'package:ar_flutter_plugin/models/ar_hittest_result.dart';
 import 'package:flutter/services.dart';
-import 'package:vector_math/vector_math_64.dart';
+import 'package:runner/src/widgets/collision.dart';
+import 'package:vector_math/vector_math_64.dart' hide Colors;
 import 'dart:math';
 
-class ObjectsOnPlanesWidget extends StatefulWidget {
-  ObjectsOnPlanesWidget({Key? key}) : super(key: key);
+class ARScreen extends StatefulWidget {
+  ARScreen({Key? key}) : super(key: key);
   @override
-  _ObjectsOnPlanesWidgetState createState() => _ObjectsOnPlanesWidgetState();
+  _ARScreenState createState() => _ARScreenState();
 }
 
-class _ObjectsOnPlanesWidgetState extends State<ObjectsOnPlanesWidget> {
+class _ARScreenState extends State<ARScreen> {
   ARSessionManager? arSessionManager;
   ARObjectManager? arObjectManager;
   ARAnchorManager? arAnchorManager;
@@ -147,6 +148,15 @@ class _ObjectsOnPlanesWidgetState extends State<ObjectsOnPlanesWidget> {
               if (distance < 1.0) {
                 print("distance is kleiner dan 0.7");
                 timer.cancel();
+                if (mounted) {
+                  // C
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            Collision()), // Replace GameOverScreen with the actual class name of your game over screen
+                  );
+                }
               }
             } else {
               print("Error: cameraPosition or nodePosition is null");
