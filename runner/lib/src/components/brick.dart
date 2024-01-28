@@ -51,7 +51,6 @@ class Brick extends RectangleComponent
     final spriteSheet = frame.image;
     print('Image created');
 
-    debugMode = true;
     print('Demo image loaded');
 
     brick1Animation = SpriteAnimationComponent.fromFrameData(

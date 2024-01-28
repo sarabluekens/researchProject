@@ -45,7 +45,7 @@ class _ARScreenState extends State<ARScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Anchors & Objects on Planes'),
+          title: const Text('Avoid the chickens!'),
         ),
         body: Stack(children: [
           ARView(

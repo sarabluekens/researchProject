@@ -86,7 +86,7 @@ class EndlessRunner extends FlameGame
     score.value = 0;
 
     world.add(Bat(
-      position: Vector2(width / 2, height * 0.90),
+      position: Vector2((width / 2) - 10, height * 0.90),
       size: Vector2(batWidth, batHeight),
       cornerRadius: const Radius.circular(ballRadius / 2),
     ));
@@ -100,7 +100,7 @@ class EndlessRunner extends FlameGame
         columns,
         spriteImage,
         Colors.red));
-    List<int> lanes = [160, 400, 640];
+    List<int> lanes = [80, 340, 620];
 
     _timer = TimerComponent(
         period: 3.0,

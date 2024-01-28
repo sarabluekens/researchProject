@@ -19,6 +19,7 @@ class GameApp extends StatefulWidget {
 
 class _GameAppState extends State<GameApp> {
   late final EndlessRunner game;
+
   // late final String prompt = widget.prompt;
 
   @override

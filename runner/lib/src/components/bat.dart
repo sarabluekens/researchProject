@@ -39,8 +39,13 @@ class Bat extends PositionComponent
     batAnimation = SpriteAnimationComponent.fromFrameData(
       sprite,
       data,
-    )..size = Vector2(256, 256);
-    add(RectangleHitbox(anchor: Anchor.topLeft, size: Vector2(256, 256)));
+    )
+      ..size = Vector2(196, 196)
+      ..scale = Vector2(1.3, 1.3);
+    add(RectangleHitbox(
+        position: Vector2(80.0, 90.0),
+        anchor: Anchor.center,
+        size: Vector2(150, 200)));
     add(batAnimation);
   }
 
